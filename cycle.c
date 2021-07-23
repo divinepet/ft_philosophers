@@ -3,37 +3,37 @@
 void	ft_philo_eat_even(t_metadata *filo)
 {
 	pthread_mutex_lock(&filo->table->forks[filo->right_fork]);
-	ft_write_text(" has taken a fork\n", filo, 0);
+	print(" has taken a fork\n", filo, 0);
 	pthread_mutex_lock(&filo->table->forks[filo->left_fork]);
-	ft_write_text(" has taken a fork\n", filo, 0);
+	print(" has taken a fork\n", filo, 0);
 	pthread_mutex_lock(&filo->table->time);
 	filo->last_eat_time = time_now();
 	pthread_mutex_unlock(&filo->table->time);
-	ft_write_text(" is eating\n", filo, 0);
+	print(" is eating\n", filo, 0);
 	_sleep(filo->all->time_to_eat);
 	pthread_mutex_unlock(&filo->table->forks[filo->right_fork]);
 	pthread_mutex_unlock(&filo->table->forks[filo->left_fork]);
-	ft_write_text(" is sleeping\n", filo, 0);
+	print(" is sleeping\n", filo, 0);
 	_sleep(filo->all->time_to_sleep);
-	ft_write_text(" is thinking\n", filo, 0);
+	print(" is thinking\n", filo, 0);
 }
 
 void	ft_philo_eat_neven(t_metadata *filo)
 {
 	pthread_mutex_lock(&filo->table->forks[filo->left_fork]);
-	ft_write_text(" has taken a fork\n", filo, 0);
+	print(" has taken a fork\n", filo, 0);
 	pthread_mutex_lock(&filo->table->forks[filo->right_fork]);
-	ft_write_text(" has taken a fork\n", filo, 0);
+	print(" has taken a fork\n", filo, 0);
 	pthread_mutex_lock(&filo->table->time);
 	filo->last_eat_time = time_now();
 	pthread_mutex_unlock(&filo->table->time);
-	ft_write_text(" is eating\n", filo, 0);
+	print(" is eating\n", filo, 0);
 	_sleep(filo->all->time_to_eat);
 	pthread_mutex_unlock(&filo->table->forks[filo->left_fork]);
 	pthread_mutex_unlock(&filo->table->forks[filo->right_fork]);
-	ft_write_text(" is sleeping\n", filo, 0);
+	print(" is sleeping\n", filo, 0);
 	_sleep(filo->all->time_to_sleep);
-	ft_write_text(" is thinking\n", filo, 0);
+	print(" is thinking\n", filo, 0);
 }
 
 void	*ft_philo_dead(void *metadata)
@@ -52,7 +52,7 @@ void	*ft_philo_dead(void *metadata)
 	pthread_mutex_unlock(&filo_dead->table->time);
 	if (filo_dead->count_eat !=
 		filo_dead->all->number_of_times_each_philosopher_must_eat)
-		ft_write_text(" died\n", filo_dead, 1);
+		print(" died\n", filo_dead, 1);
 	filo_dead->all->philo_dead = 1;
 	pthread_mutex_unlock(&filo_dead->table->death);
 	return (NULL);

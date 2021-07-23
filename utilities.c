@@ -2,21 +2,21 @@
 
 void	_sleep(long time)
 {
-	long	fix_time;
+	long	tmp;
 
-	fix_time = time_now();
-	while (time_now() - fix_time < time)
+	tmp = time_now();
+	while (time_now() - tmp < time)
 		usleep(1);
 }
 
-void	ft_write_text(char *s, t_metadata *filo, int flag)
+void	print(char *str, t_metadata *filo, int flag)
 {
 	pthread_mutex_lock(&filo->table->text);
 	pthread_mutex_lock(&filo->table->time);
 	pthread_mutex_unlock(&filo->table->time);
 	pthread_mutex_lock(&filo->table->death);
 	if (filo->all->philo_dead != 1)
-		printf("%s[%ldms]%s philosopher %d%s%s", BLUE, time_now() - filo->all->start_time, CYAN, filo->philo_id + 1, s, RESET);	
+		printf("%s[%ldms]%s philosopher %d%s%s", BLUE, time_now() - filo->all->start_time, CYAN, filo->philo_id + 1, str, RESET);	
 	if (!flag)
 		pthread_mutex_unlock(&filo->table->death);
 	pthread_mutex_unlock(&filo->table->text);

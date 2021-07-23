@@ -44,11 +44,10 @@ typedef struct		s_metadata
 	t_table			*table;
 }					t_metadata;
 
-// int					create_philosophers(t_data *all);
 void*				life_cycle(void *ptr);
 
 void				_sleep(long time);
-void				ft_write_text(char *s, t_metadata *filo, int flag);
+void				print(char *str, t_metadata *filo, int flag);
 long				time_now(void);
 
 int					ft_atoi(const char *str);
