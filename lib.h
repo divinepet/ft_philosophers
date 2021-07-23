@@ -13,12 +13,12 @@
 
 typedef struct		s_data
 {
-	int				number_of_philosophers;
+	int				ph_number;
 	long			time_to_die;
 	long			time_to_eat;
 	long			time_to_sleep;
 	long			start_time;
-	int				number_of_times_each_philosopher_must_eat;
+	int				must_eat;
 	int				philo_dead;
 }					t_data;
 
@@ -33,7 +33,7 @@ typedef struct		s_table
 typedef struct		s_metadata
 {
 	pthread_t		thread;
-	int				philo_id;
+	int				id;
 	int				status;
 	int				status_join;
 	int				left_fork;
@@ -47,7 +47,7 @@ typedef struct		s_metadata
 void*				life_cycle(void *ptr);
 
 void				_sleep(long time);
-void				print(char *str, t_metadata *filo);
+void				print(char *str, t_metadata *philosopher);
 long				time_now(void);
 
 int					ft_atoi(const char *str);

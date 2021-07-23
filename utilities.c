@@ -1,5 +1,16 @@
 #include "lib.h"
 
+void	print(char *str, t_metadata *philosopher)
+{
+	pthread_mutex_lock(&philosopher->table->text);
+	pthread_mutex_lock(&philosopher->table->death);
+	if (philosopher->all->philo_dead != 1)
+		printf("%s[%ldms]%s philosopher %d %s%s", BLUE, time_now() - philosopher->all->start_time, CYAN, philosopher->id + 1, str, RESET);	
+	if (ft_strcmp(str, "died"))
+		pthread_mutex_unlock(&philosopher->table->death);
+	pthread_mutex_unlock(&philosopher->table->text);
+}
+
 void	_sleep(long time)
 {
 	long	tmp;
@@ -7,19 +18,6 @@ void	_sleep(long time)
 	tmp = time_now();
 	while (time_now() - tmp < time)
 		usleep(1);
-}
-
-void	print(char *str, t_metadata *filo)
-{
-	pthread_mutex_lock(&filo->table->text);
-	pthread_mutex_lock(&filo->table->time);
-	pthread_mutex_unlock(&filo->table->time);
-	pthread_mutex_lock(&filo->table->death);
-	if (filo->all->philo_dead != 1)
-		printf("%s[%ldms]%s philosopher %d %s%s", BLUE, time_now() - filo->all->start_time, CYAN, filo->philo_id + 1, str, RESET);	
-	if (ft_strcmp(str, "died"))
-		pthread_mutex_unlock(&filo->table->death);
-	pthread_mutex_unlock(&filo->table->text);
 }
 
 long	time_now(void)
