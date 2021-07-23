@@ -8,7 +8,8 @@ SRCS = 	main.c \
 		lib/ft_isdigit.c \
 		lib/ft_itoa.c \
 		lib/ft_strjoin.c \
-		lib/ft_strlen.c
+		lib/ft_strlen.c \
+		lib/ft_strcmp.c
 		
 OBJS = $(SRCS:.c=.o)
 CFLAGS = -Wall -Wextra -Werror

@@ -9,15 +9,15 @@ void	_sleep(long time)
 		usleep(1);
 }
 
-void	print(char *str, t_metadata *filo, int flag)
+void	print(char *str, t_metadata *filo)
 {
 	pthread_mutex_lock(&filo->table->text);
 	pthread_mutex_lock(&filo->table->time);
 	pthread_mutex_unlock(&filo->table->time);
 	pthread_mutex_lock(&filo->table->death);
 	if (filo->all->philo_dead != 1)
-		printf("%s[%ldms]%s philosopher %d%s%s", BLUE, time_now() - filo->all->start_time, CYAN, filo->philo_id + 1, str, RESET);	
-	if (!flag)
+		printf("%s[%ldms]%s philosopher %d %s%s", BLUE, time_now() - filo->all->start_time, CYAN, filo->philo_id + 1, str, RESET);	
+	if (ft_strcmp(str, "died"))
 		pthread_mutex_unlock(&filo->table->death);
 	pthread_mutex_unlock(&filo->table->text);
 }

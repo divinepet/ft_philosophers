@@ -47,12 +47,13 @@ typedef struct		s_metadata
 void*				life_cycle(void *ptr);
 
 void				_sleep(long time);
-void				print(char *str, t_metadata *filo, int flag);
+void				print(char *str, t_metadata *filo);
 long				time_now(void);
 
 int					ft_atoi(const char *str);
 char*				ft_itoa(int n);
 char*				ft_strjoin(char const *s1, char const *s2);
+int					ft_strcmp(const char *str1, const char *str2);
 size_t				ft_strlen(char *str);
 int					ft_isdigit(int ch);
 
