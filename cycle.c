@@ -1,86 +1,75 @@
 #include "lib.h"
 
-void	ft_philo_eat_even(t_metadata *philosopher)
+void	eating(t_metadata *philosopher, int status)
 {
-	pthread_mutex_lock(&philosopher->table->forks[philosopher->right_fork]);
-	print("has taken a fork\n", philosopher);
-	pthread_mutex_lock(&philosopher->table->forks[philosopher->left_fork]);
-	print("has taken a fork\n", philosopher);
+	if (status == 1)
+	{
+		pthread_mutex_lock(&philosopher->table->forks[philosopher->left_fork]);
+		print("has taken a fork\n", philosopher);
+		pthread_mutex_lock(&philosopher->table->forks[philosopher->right_fork]);
+		print("has taken a fork\n", philosopher);
+	}
+	else
+	{
+		pthread_mutex_lock(&philosopher->table->forks[philosopher->right_fork]);
+		print("has taken a fork\n", philosopher);
+		pthread_mutex_lock(&philosopher->table->forks[philosopher->left_fork]);
+		print("has taken a fork\n", philosopher);
+	}
 	pthread_mutex_lock(&philosopher->table->time);
-	philosopher->last_eat_time = time_now();
-	pthread_mutex_unlock(&philosopher->table->time);
+	philosopher->t_last_eat = time_now();
 	print("is eating\n", philosopher);
-	_sleep(philosopher->all->time_to_eat);
-	pthread_mutex_unlock(&philosopher->table->forks[philosopher->right_fork]);
-	pthread_mutex_unlock(&philosopher->table->forks[philosopher->left_fork]);
-	print("is sleeping\n", philosopher);
-	_sleep(philosopher->all->time_to_sleep);
-	print("is thinking\n", philosopher);
-}
-
-void	ft_philo_eat_neven(t_metadata *philosopher)
-{
-	pthread_mutex_lock(&philosopher->table->forks[philosopher->left_fork]);
-	print("has taken a fork\n", philosopher);
-	pthread_mutex_lock(&philosopher->table->forks[philosopher->right_fork]);
-	print("has taken a fork\n", philosopher);
-	pthread_mutex_lock(&philosopher->table->time);
-	philosopher->last_eat_time = time_now();
+	philosopher->count_eat++;
 	pthread_mutex_unlock(&philosopher->table->time);
-	print("is eating\n", philosopher);
-	_sleep(philosopher->all->time_to_eat);
+	_sleep(philosopher->all->t_eat);
 	pthread_mutex_unlock(&philosopher->table->forks[philosopher->left_fork]);
 	pthread_mutex_unlock(&philosopher->table->forks[philosopher->right_fork]);
 	print("is sleeping\n", philosopher);
-	_sleep(philosopher->all->time_to_sleep);
+	_sleep(philosopher->all->t_sleep);
 	print("is thinking\n", philosopher);
 }
 
-void	*ft_philo_dead(void *metadata)
+void	*dead_philosopher_thread(void *metadata)
 {
-	t_metadata		*philosopher_dead;
+	t_metadata		*ph;
 
-	philosopher_dead = metadata;
+	ph = metadata;
 	while (1)
 	{
-		pthread_mutex_lock(&philosopher_dead->table->time);
-		if ((time_now() - philosopher_dead->last_eat_time)
-			> philosopher_dead->all->time_to_die)
+		pthread_mutex_lock(&ph->table->time);
+		if ((time_now() - ph->t_last_eat) > ph->all->t_die)
 			break ;
-		pthread_mutex_unlock(&philosopher_dead->table->time);
+		pthread_mutex_unlock(&ph->table->time);
 	}
-	pthread_mutex_unlock(&philosopher_dead->table->time);
-	if (philosopher_dead->count_eat !=
-		philosopher_dead->all->must_eat)
-		print("died\n", philosopher_dead);
-	philosopher_dead->all->philo_dead = 1;
-	pthread_mutex_unlock(&philosopher_dead->table->death);
+	pthread_mutex_unlock(&ph->table->time);
+	if (ph->count_eat != ph->all->must_eat)
+	{
+		print("died\n", ph);
+		ph->all->philo_dead = 1;
+	}
+	pthread_mutex_unlock(&ph->table->death);
 	return (NULL);
 }
 
-void*		life_cycle(void *metadata)
+void	*life_cycle_thread(void *metadata)
 {
 	pthread_t	thread_dead;
+	int			thread_number;
 	int			status;
-	int			status_join;
-	t_metadata		*philosopher;
+	t_metadata	*ph;
 
-	philosopher = metadata;
-	philosopher->left_fork = philosopher->id;
-	philosopher->right_fork = philosopher->id - 1;
-	if (philosopher->right_fork < 0)
-		philosopher->right_fork = philosopher->all->ph_number - 1;
-	status = philosopher->id % 2;
-	pthread_create(&thread_dead, NULL, ft_philo_dead, philosopher);
-	philosopher->count_eat = 0;
-	while (philosopher->count_eat != philosopher->all->must_eat && philosopher->all->philo_dead != 1)
+	ph = metadata;
+	ph->left_fork = ph->id;
+	ph->right_fork = ph->id - 1;
+	if (ph->right_fork < 0)
+		ph->right_fork = ph->all->ph_number - 1;
+	thread_number = ph->id % 2;
+	pthread_create(&thread_dead, NULL, dead_philosopher_thread, ph);
+	ph->count_eat = 0;
+	while (ph->all->philo_dead != 1 && ph->count_eat != ph->all->must_eat)
 	{
-		if (status == 1)
-			ft_philo_eat_neven(philosopher);
-		if (status != 1)
-			ft_philo_eat_even(philosopher);
-		philosopher->count_eat++;
+		eating(ph, thread_number);
 	}
-	status = pthread_join(thread_dead, (void**)&status_join);
+	pthread_join(thread_dead, (void **)&status);
 	return (NULL);
 }

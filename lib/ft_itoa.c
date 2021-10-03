@@ -1,6 +1,6 @@
 #include "../lib.h"
 
-static	int		n_length(int n)
+static int	n_length(int n)
 {
 	int	mem;
 
@@ -22,8 +22,9 @@ static	char	*final(int n, int mem, char *str, int q)
 {
 	int	ink;
 
-	ink = (n >= 0) ? 1 : -1;
-	n = (n < 0) ? (n *= -1) : n;
+	ink = (n >= 0);
+	if (n < 0)
+		n *= -1;
 	str[mem] = '\0';
 	while (mem-- && n >= 10)
 	{
@@ -38,7 +39,7 @@ static	char	*final(int n, int mem, char *str, int q)
 	return (str);
 }
 
-char			*ft_itoa(int n)
+char	*ft_itoa(int n)
 {
 	int		i;
 	int		mem;
@@ -53,7 +54,8 @@ char			*ft_itoa(int n)
 		q = 1;
 	}
 	mem = n_length(n);
-	if (!(str = (char*)malloc(sizeof(char) * (mem + 1))))
+	str = (char *)malloc(sizeof(char) * (mem + 1));
+	if (!str)
 		return (NULL);
 	return (final(n, mem, str, q));
 }

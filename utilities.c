@@ -5,8 +5,14 @@ void	print(char *str, t_metadata *philosopher)
 	pthread_mutex_lock(&philosopher->table->text);
 	pthread_mutex_lock(&philosopher->table->death);
 	if (philosopher->all->philo_dead != 1)
-		printf("%s[%ldms]%s philosopher %d %s%s", BLUE, time_now() - philosopher->all->start_time, CYAN, philosopher->id + 1, str, RESET);	
-	if (ft_strcmp(str, "died"))
+		printf("%s[%ldms]%s philosopher %d %s%s",
+			BLUE,
+			time_now() - philosopher->all->t_start,
+			CYAN,
+			philosopher->id + 1,
+			str,
+			RESET);
+	if (ft_strcmp(str, "died\n"))
 		pthread_mutex_unlock(&philosopher->table->death);
 	pthread_mutex_unlock(&philosopher->table->text);
 }
@@ -17,13 +23,13 @@ void	_sleep(long time)
 
 	tmp = time_now();
 	while (time_now() - tmp < time)
-		usleep(1);
+		usleep(40);
 }
 
 long	time_now(void)
 {
-	struct timeval time;
+	struct timeval	time;
 
 	gettimeofday(&time, NULL);
-	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
+	return ((time.tv_sec * 1000.0) + (time.tv_usec / 1000.0));
 }
